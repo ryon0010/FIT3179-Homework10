@@ -1,0 +1,55 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "projection": {"type": "mercator"},
+  "width": "container", 
+  "height": "container",  
+  "padding": {"top": 0, "bottom": 0, "left": 0, "right": 0},
+  "autosize": {
+    "type": "fit",
+    "contains": "padding"
+  },
+  "data": {
+    "url": "ne_1.json",
+    "format": {"type": "topojson", "feature": "ne_10m_admin_1_states_provinces"}
+  },
+  "transform": [
+    {
+      "lookup": "properties.name",
+      "from": {
+        "data": {
+          "url": "income_state.csv"
+        },
+        "key": "state",
+        "fields": ["income_mean"]
+      }
+    }
+  ],
+  "layer": [
+    {
+      "mark": {"type": "geoshape"},
+      "encoding": {
+        "color": {
+          "field": "income_mean",
+          "type": "quantitative",
+          "scale": {
+            "scheme": "yellowgreenblue",
+            "domain": [5000, 10000, 15000] 
+          },
+          "legend": {
+            "orient": "bottom-right",  
+            "title": "Mean Income (MYR)",
+            "direction": "horizontal",
+            "gradientLength": 150,          
+            "gradientThickness": 12
+          }
+        },
+        "tooltip": [
+          {"field": "properties.name", "type": "nominal", "title": "State"},
+          {"field": "income_mean", "type": "quantitative", "title": "Mean Income"}
+        ]
+      }
+    }
+    
+  ]
+}
+
